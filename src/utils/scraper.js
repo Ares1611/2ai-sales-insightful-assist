@@ -1,23 +1,11 @@
 import axios from 'axios';
-import * as cheerio from 'cheerio';
 
 export const scrapeCompanyWebsite = async (url) => {
   try {
-    const { data } = await axios.get(url);
-    const $ = cheerio.load(data);
-
-    const aboutUs = $('#about-us').text().trim();
-    const careers = $('#careers').text().trim();
-    const news = $('#news').text().trim();
-
-    return {
-      aboutUs,
-      careers,
-      news
-    };
+    const response = await axios.post('/api/scrape', { url });
+    return response.data;
   } catch (error) {
-    console.error(`Error scraping website: ${error.message}`);
-    return {};
+    console.error(`Error scraping website: ${error.response?.data?.error || error.message}`);
+    throw error;
   }
 };
-

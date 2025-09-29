@@ -1,22 +1,11 @@
-import { Configuration, OpenAIApi } from 'openai';
-
-const configuration = new Configuration({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY || 'your-default-api-key',
-});
-
-const openai = new OpenAIApi(configuration);
+import axios from 'axios';
 
 export const generateAnalysis = async (text) => {
   try {
-    const response = await openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt: `Analyze the following text and provide a detailed report:\n\n${text}`,
-      max_tokens: 500,
-    });
-
-    return response.data.choices[0].text.trim();
+    const response = await axios.post('/api/analyze', { text });
+    return response.data.analysis;
   } catch (error) {
-    console.error(`Error generating analysis: ${error}`);
-    return 'Error generating analysis';
+    console.error(`Error generating analysis: ${error.response?.data?.error || error.message}`);
+    throw error;
   }
 };
