@@ -22,4 +22,4 @@ const main = () => {
   window.addEventListener("load", observeUrlChange);
 };
 
-main().catch(console.error);
+main();
